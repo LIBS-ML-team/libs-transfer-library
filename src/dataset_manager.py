@@ -1,27 +1,3 @@
-dataset_manager.py
-Who has access
-P
-
-J
-System properties
-Type
-Text
-Size
-6 KB
-Storage used
-12 KB
-Location
-src
-Owner
-me
-Modified
-26 Oct 2021 by LIBS MLteam
-Opened
-18:14 by me
-Created
-23 Aug 2021 with Google Drive Web
-Add a description
-Viewers can download
 from pathlib import Path
 from typing import Union
 import pickle
