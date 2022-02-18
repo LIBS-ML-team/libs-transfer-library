@@ -1,12 +1,14 @@
-from tensorflow.keras.callbacks import Callback
 import pandas as pd
 import numpy as np
+import dill as pickle
+from pathlib import Path
+
+from tensorflow.keras.callbacks import Callback
 
 
 class ModelMetricCallback(Callback):
     """
-    Each epoch applies metrics on the entire model. Saves the result in pd.DataFrame under <.results>.
-    TODO examples.
+    Each epoch, applies a list of metrics on the entire model. Saves the result in a pd.DataFrame under <.results>.
     """
     def __init__(self, metrics = {}):
         self.metrics = metrics
@@ -24,15 +26,11 @@ class ModelMetricCallback(Callback):
     def on_train_end(self, logs={}):
       self.results = pd.DataFrame.from_dict(self.results, orient='index', columns=list(self.metrics.keys()))
       
-      
-
-from tensorflow.keras.callbacks import Callback
-import dill as pickle
-from pathlib import Path
-
+     
+    
 class WeightSaver(Callback):
   """
-  Saves the incoming weights of neurons given by coordinates for each batch with differing step.
+  Saves the history of weight development for select neurons.
   Hint - First layer is the input layer.
   """
 
@@ -70,3 +68,14 @@ class WeightSaver(Callback):
 
   def on_train_end(self, logs={}):
     self.results = [pd.DataFrame.from_dict(result, orient='index') for result in self.results]
+    
+    
+
+class ClearMemory(Callback):
+  """
+  Clears memory between each training epoch.
+  """
+    
+  def on_epoch_end(self, epoch, logs=None):
+    tf.keras.backend.clear_session()
+    gc.collect()
