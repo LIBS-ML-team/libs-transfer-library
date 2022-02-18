@@ -8,8 +8,6 @@ import gc
 import numpy as np
 import pandas as pd
 
-# TODO use h5py and ftputil
-
 class DatasetManager:
 
   def __init__(self, project_id: str, datasets_dir: Union[Path, str] = "./datasets/", cache=False):
