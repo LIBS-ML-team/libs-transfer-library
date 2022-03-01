@@ -1,8 +1,9 @@
+from pathlib import Path
+import gc
+
 import pandas as pd
 import numpy as np
 import dill as pickle
-from pathlib import Path
-
 from tensorflow.keras.callbacks import Callback
 
 
