@@ -44,7 +44,7 @@ class LabelCropp(BaseEstimator, TransformerMixin):
       
     if not np.issubdtype(labels.dtype, np.number):
       raise ValueError('Only implemented for numeric values')
-    if self.label_from > np.maximum(labels) or self.label_to < np.minimum(labels):
+    if self.label_from > labels.max() or self.label_to < labels.min():
       warnings.warn('Labels out of range! Skipping!')
       return X
 
@@ -81,7 +81,7 @@ class Cover(BaseEstimator, TransformerMixin):
       
     if not np.issubdtype(labels.dtype, np.number):
       raise ValueError('Only implemented for numeric values')
-    if self.label_from > np.maximum(labels) or self.label_to < np.minimum(labels):
+    if self.label_from > labels.max() or self.label_to < labels.min():
       warnings.warn('Labels out of range! Skipping!')
       return X
 
