@@ -1,20 +1,17 @@
-from sklearn.base import BaseEstimator, TransformerMixin
+import warnings
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
-
+from sklearn.base import BaseEstimator, TransformerMixin
 from scipy.signal import savgol_filter
 from sklearn.utils import resample
 from sklearn.preprocessing import normalize
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_selection import SelectFromModel
-
 from sklearn.utils.validation import check_array, check_is_fitted
 from sklearn.pipeline import Pipeline
-
 from scipy.integrate import trapz
-
-from typing import Tuple
 
 
 class LabelCropp(BaseEstimator, TransformerMixin):
@@ -44,8 +41,12 @@ class LabelCropp(BaseEstimator, TransformerMixin):
       labels = np.arange(self.n_features_in_)
     else:
       labels = self.labels
+      
     if not np.issubdtype(labels.dtype, np.number):
       raise ValueError('Only implemented for numeric values')
+    if self.label_from > np.maximum(labels) or self.label_to < np.minimum(labels):
+      warnings.warn('Labels out of range! Skipping!')
+      return X
 
     idx_from, idx_to = np.argmax(labels >= self.label_from),  len(labels) - np.argmax((labels <= self.label_to)[::-1]) - 1
     return X[:, idx_from: idx_to]
@@ -77,8 +78,12 @@ class Cover(BaseEstimator, TransformerMixin):
       labels = np.arange(self.n_features_in_)
     else:
       labels = self.labels
+      
     if not np.issubdtype(labels.dtype, np.number):
       raise ValueError('Only implemented for numeric values')
+    if self.label_from > np.maximum(labels) or self.label_to < np.minimum(labels):
+      warnings.warn('Labels out of range! Skipping!')
+      return X
 
     idx_from, idx_to = np.argmax(labels >= self.label_from),  len(labels) - np.argmax((labels <= self.label_to)[::-1]) - 1
     X_new = np.array(X, copy=True)
