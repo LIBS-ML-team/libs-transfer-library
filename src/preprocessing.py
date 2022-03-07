@@ -19,7 +19,7 @@ from typing import Tuple
 
 class LabelCropp(BaseEstimator, TransformerMixin):
   """
-  TODO supports only Ord labels
+  TODO add nonnumeric labels
   """
 
   def __init__(self, label_from=None, label_to=None, labels=None):
@@ -41,15 +41,50 @@ class LabelCropp(BaseEstimator, TransformerMixin):
     if X.shape[1] != self.n_features_in_:
       raise ValueError('Fit ({}) and Transform ({}) data does not match shape!'.format(self.n_features_in_, X.shape[1]))
     if self.labels is None:
-      labels = pd.Series(range(self.n_features_in_))
+      labels = np.arange(self.n_features_in_)
     else:
-      if not isinstance(self.labels, pd.Series):
-        labels = pd.Series(self.labels)
-      else:
-        labels = self.labels
+      labels = self.labels
+    if not np.issubdtype(labels.dtype, np.number):
+      raise ValueError('Only implemented for numeric values')
 
-    idx_from, idx_to = labels[labels >= self.label_from].index[0], labels[labels <= self.label_to].index[-1]
+    idx_from, idx_to = np.argmax(labels >= self.label_from),  len(labels) - np.argmax((labels <= self.label_to)[::-1]) - 1
     return X[:, idx_from: idx_to]
+    
+    
+    
+class Cover(BaseEstimator, TransformerMixin):
+  """
+  """
+
+  def __init__(self, label_from=None, label_to=None, labels=None):
+    self.label_from = label_from
+    self.label_to = label_to
+    self.labels = labels
+
+
+  def fit(self, X, y=None):
+    X = check_array(X)
+    self.n_features_in_ = X.shape[1]
+    return self
+
+
+  def transform(self, X, y=None):
+    check_is_fitted(self)
+    X = check_array(X)
+    if X.shape[1] != self.n_features_in_:
+      raise ValueError('Fit ({}) and Transform ({}) data does not match shape!'.format(self.n_features_in_, X.shape[1]))
+    if self.labels is None:
+      labels = np.arange(self.n_features_in_)
+    else:
+      labels = self.labels
+    if not np.issubdtype(labels.dtype, np.number):
+      raise ValueError('Only implemented for numeric values')
+
+    idx_from, idx_to = np.argmax(labels >= self.label_from),  len(labels) - np.argmax((labels <= self.label_to)[::-1]) - 1
+    X_new = np.array(X, copy=True)
+    X_new[:, idx_from: idx_to] = 0
+    return X_new
+
 
 
 
