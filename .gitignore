@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# datasets cannot be stored on github
+.datasets/
+
+# keras tuner history
+.untitled_project/
+
+.settings.json
