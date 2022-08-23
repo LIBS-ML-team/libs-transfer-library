@@ -1,2 +1,2 @@
 # LIBS_library
-Library with tools for LIBS data analysis
+Code for a published paper: Library transfer between distinct spectroscopic (LIBS) systems with shared standards
