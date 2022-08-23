@@ -40,6 +40,7 @@ def reshape(values:np.array, dimensions: Tuple[int, int], index_type: IndexType)
 def plot_map(values: np.array,                                                 
              dim: Tuple[int, int],                                      
              index_type: IndexType=IndexType.HORIZONTAL,
+             title: Optional[str]=None,
              *args,
              **kwargs,                                                      
              ):
@@ -49,6 +50,10 @@ def plot_map(values: np.array,
         z=values,
         *args,
         **kwargs))
+
+  fig.update_layout(
+    title=title,
+  )
 
   return fig
 
@@ -70,7 +75,7 @@ def error_map(y_true: Iterable[T],
       title = ''
     title += ' (avg: {}, min: {}, max: {})'.format(np.mean(values), np.min(values), np.max(values))
 
-  return plot_map(values, dim, index_type, *args, **kwargs)
+  return plot_map(values, dim, index_type, title=title, *args, **kwargs)
 
 
 def intensity_map(spectra: np.array,
